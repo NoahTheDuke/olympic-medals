@@ -49,6 +49,7 @@ function renderRow(row: Row) {
 function buildText(records: Row[]): string | undefined {
   let retries = 0;
   while (retries < 5) {
+    retries += 1;
     const { olympiad, sport, event, year, city, season } = _.sample(
       records,
     ) as Row;
@@ -61,16 +62,14 @@ function buildText(records: Row[]): string | undefined {
     const silver = _.filter(medals, (row) => row.medal_type === "Silver");
     const bronze = _.filter(medals, (row) => row.medal_type === "Bronze");
 
-    const topLine = `${city}, ${year} ${season} Olympics\n${sport} - ${event}`;
+    const topLine = `${city} ${year} - ${season}\n${sport} - ${event}`;
     const medalStrs = _.chain(_.concat(gold, silver, bronze))
       .map(renderRow)
       .join("\n");
     const result = `${topLine}\n\n${medalStrs}`;
-    if (result.length > 300) {
-      retries += 1;
-      continue;
+    if (result.length < 300) {
+      return result;
     }
-    return result;
   }
 }
 
