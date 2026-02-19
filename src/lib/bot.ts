@@ -30,10 +30,8 @@ export default class Bot {
   async post(
     text:
       | string
-      | (
-        & Partial<AppBskyFeedPost.Record>
-        & Omit<AppBskyFeedPost.Record, "createdAt">
-      ),
+      | (Partial<AppBskyFeedPost.Record> &
+          Omit<AppBskyFeedPost.Record, "createdAt">),
   ) {
     if (typeof text === "string") {
       const richText = new RichText({ text });
@@ -49,7 +47,7 @@ export default class Bot {
   }
 
   static async run(
-    getPostText: () => Promise<string>,
+    getPostText: () => Promise<string | undefined>,
     botOptions?: Partial<BotOptions>,
   ) {
     const { service, dryRun } = botOptions
@@ -57,12 +55,15 @@ export default class Bot {
       : this.defaultOptions;
     const bot = new Bot(service);
     await bot.login(bskyAccount);
-    const text = (await getPostText()).trim();
-    if (!dryRun) {
-      await bot.post(text);
-    } else {
-      console.log(text);
+    let text = await getPostText();
+    if (text) {
+      text = text.trim();
+      if (!dryRun) {
+        await bot.post(text);
+      } else {
+        console.log(text);
+      }
+      return text;
     }
-    return text;
   }
 }

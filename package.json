@@ -10,7 +10,8 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "start": "node .",
-    "dev": "tsc && nodenv ."
+    "format": "prettier src --write",
+    "dev": "tsc && DRYRUN=1 nodenv ."
   },
   "keywords": [
     "bsky",
@@ -31,6 +32,7 @@
     "@types/node": "^22.19.11",
     "eslint": "^9.15.0",
     "node-env-run": "^4.0.2",
+    "prettier": "3.8.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.15.0"
   },
