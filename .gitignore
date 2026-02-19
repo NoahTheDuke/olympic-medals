@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.cpcache
+.nrepl-port
+.rebel_readline_history
+.clj-kondo/.cache
+.lsp/.cache
+
+db/
