@@ -43,7 +43,11 @@ const medalEmoji = {
 };
 
 function renderRow(row: Row) {
-  return `${medalEmoji[row.medal_type]}: ${row.winner} (${row.committee})`;
+  const winner =
+    row.winner === row.committee
+      ? `Team ${row.winner}`
+      : `${row.winner} (${row.committee})`;
+  return `${medalEmoji[row.medal_type]}: ${winner}`;
 }
 
 function buildText(records: Row[]): string | undefined {
