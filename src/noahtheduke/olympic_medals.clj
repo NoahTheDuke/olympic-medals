@@ -1,15 +1,18 @@
 (ns noahtheduke.olympic-medals
   (:require
    [clj-http.client :as client]
+   [clojure.data.csv :as csv]
+   [clojure.data.json :as json]
+   [clojure.java.io :as io]
    [clojure.string :as str]
    [clojure.walk :refer [postwalk]]
    [hickory.core :refer [as-hiccup parse]]
-   [next.jdbc :as jdbc]
-   [next.jdbc.result-set :as rs]
    [honey.sql :as sql]
    [honey.sql.helpers :as h]
-   [clojure.data.json :as json]
-   [noahtheduke.olympic-medals.data :refer [country-names country-code->name]]
+   [next.jdbc :as jdbc]
+   [next.jdbc.result-set :as rs]
+   [noahtheduke.olympic-medals.data :refer [country-code->name country-names
+                                            season]]
    [noahtheduke.splint.pattern :refer [pattern]])
   (:import
    [clojure.lang ExceptionInfo]
@@ -321,7 +324,7 @@
                      (str year "-" (months->number month) "-" day)))))
 
 (comment
-  (format-date "19 – 21 January 2024 — 11:00"))
+  (format-date "8 – 9 February 2026"))
 
 (defmethod get-links :results [pending-url]
   (let [html (parse-page (:url pending-url))
@@ -387,11 +390,57 @@
 (comment
   (executor))
 
+"1 August 2021"
+
+
 (defn get-rows []
-  (-> (h/select :g.year :g.city :s.name :e.name :e.url
-                :r.date :r.athlete :r.country :r.medal)
-      (h/from [:results :r])
-      (h/join [:games :g] [:= :g.id :r.game-id])
-      (h/join [:sports :s] [:= :s.id :r.sport-id])
-      (h/join [:events :e] [:= :e.id :r.event-id])
-      (execute!)))
+  (-> (h/select :games/year :games/city :sports/name :events/name :events/url
+                :results/date :results/athlete :results/country :results/medal)
+      (h/from :results)
+      (h/join :games [:= :games/id :results/game-id])
+      (h/join :sports [:= :sports/id :results/sport-id])
+      (h/join :events [:= :events/id :results/event-id])
+      (execute!)
+      ))
+
+(comment
+  (last (get-rows)))
+
+(defn set-date
+  [row]
+  (let [[_ year month day] (re-find #".*?(\d\d\d\d)-(\d\d)-(\d+)" (:results/date row))]
+    (-> row
+        (assoc :results/year (parse-long year))
+        (assoc :results/month (parse-long month))
+        (assoc :results/day (parse-long day))
+        (assoc :results/date (format "%s-%s-%02d" year month (parse-long day))))))
+
+(comment
+  country-names
+  (set-date {:results/date "8 -  2026-02-9"}))
+
+(defn set-season
+  [row]
+  (assoc row :games/season (season [(:games/year row) (:games/city row)])))
+
+(comment
+  (set-season (last (get-rows))))
+
+(def map->csv
+  (juxt :games/season :results/year :results/month :results/day :games/city :sports/name :events/name
+        :events/url :results/medal :results/athlete :results/country))
+
+(def rows (get-rows))
+(comment
+  (->> rows
+       (take 1)
+       (mapv #(-> % set-date set-season))
+       (sort-by (juxt :results/date :sports/name :events/name #({"Gold" 1 "Silver" 2 "Bronze" 3} (:results/medal %))))
+       (mapv map->csv))
+  (with-open [writer (io/writer "./data/olympic-medals-2.csv")]
+    (csv/write-csv writer
+      (into [["season" "year" "month" "day" "city" "sport" "event" "url" "medal" "winner" "country"]]
+            (->> (get-rows)
+                 (mapv #(-> % set-date set-season))
+                 (sort-by (juxt :results/date :sports/name :events/name #({"Gold" 1 "Silver" 2 "Bronze" 3} (:results/medal %))))
+                 (mapv map->csv))))))

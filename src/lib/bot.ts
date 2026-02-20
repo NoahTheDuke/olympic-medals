@@ -1,5 +1,10 @@
 import { bskyAccount, bskyService } from "./config.js";
-import type { AppBskyFeedPost, AtpAgentLoginOpts, AtpAgentOptions } from "@atproto/api";
+import type {
+	AppBskyFeedPost,
+	AtpAgentLoginOpts,
+	AtpAgentOptions,
+	Facet,
+} from "@atproto/api";
 import { AtpAgent, RichText } from "@atproto/api";
 
 interface BotOptions {
@@ -8,7 +13,7 @@ interface BotOptions {
 }
 
 export default class Bot {
-	#agent;
+	agent;
 
 	static defaultOptions: BotOptions = {
 		service: bskyService,
@@ -16,11 +21,11 @@ export default class Bot {
 	} as const;
 
 	constructor(service: AtpAgentOptions["service"]) {
-		this.#agent = new AtpAgent({ service });
+		this.agent = new AtpAgent({ service });
 	}
 
 	login(loginOpts: AtpAgentLoginOpts) {
-		return this.#agent.login(loginOpts);
+		return this.agent.login(loginOpts);
 	}
 
 	async post(
@@ -30,35 +35,39 @@ export default class Bot {
 	) {
 		if (typeof text === "string") {
 			const richText = new RichText({ text });
-			await richText.detectFacets(this.#agent);
+			await richText.detectFacets(this.agent);
 			const record = {
 				text: richText.text,
 				facets: richText.facets,
 			};
-			return this.#agent.post(record);
+			return this.agent.post(record);
 		} else {
-			return this.#agent.post(text);
+			return this.agent.post(text);
 		}
 	}
 
 	static async run(
-		getPostText: () => Promise<string | undefined>,
+		post: undefined | string | { text: string; facets: Facet[] },
 		botOptions?: Partial<BotOptions>,
 	) {
+		if (!post) return;
 		const { service, dryRun } = botOptions
 			? Object.assign({}, this.defaultOptions, botOptions)
 			: this.defaultOptions;
 		const bot = new Bot(service);
 		await bot.login(bskyAccount);
-		let text = await getPostText();
-		if (text) {
-			text = text.trim();
-			if (!dryRun) {
-				await bot.post(text);
-			} else {
-				console.log(text);
-			}
-			return text;
+		const record =
+			typeof post === "string"
+				? post.trim()
+				: {
+						text: post.text.trim(),
+						facets: post.facets,
+					};
+		if (!dryRun) {
+			await bot.post(record);
+		} else {
+			console.log(post);
 		}
+		return post;
 	}
 }

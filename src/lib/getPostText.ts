@@ -2,30 +2,27 @@ import fs from "node:fs";
 import { parse } from "csv-parse";
 import { finished } from "stream/promises";
 import _ from "lodash";
-import { countries } from "./countries.js";
+import { AtpAgent, Facet, RichText } from "@atproto/api";
 
-// Olympiad,Discipline,Event,Winner,Medal_type,Olympic_city,Olympic_year,Olympic_season,Gender,Code,Committee,Committee_type
-// Athina 1896,Artistic Gymnastics,"Horizontal Bar, Men",Hermann Weingärtner,Gold,Athens,1896,summer,Men,GER,Germany,Country
-
+// season,year,month,day,city,sport,event,url,medal,winner,country
 interface Row {
-	olympiad: string;
+	season: string;
+	year: string;
+	month: string;
+	day: string;
+	city: string;
 	sport: string;
 	event: string;
+	url: string;
+	medal: "Gold" | "Silver" | "Bronze";
 	winner: string;
-	medal_type: "Gold" | "Silver" | "Bronze";
-	city: string;
-	year: string;
-	season: string;
-	gender: string;
-	code: string;
-	committee: string;
-	committee_type: string;
+	country: string;
 }
 
 const processFile = async () => {
 	const records: Row[] = [];
 	const parser = fs
-		.createReadStream(`./data/olympic_medals.csv`)
+		.createReadStream("./data/olympic-medals.csv")
 		.pipe(parse({ columns: true }));
 	parser.on("readable", function () {
 		let record;
@@ -44,34 +41,43 @@ const medalEmoji = {
 };
 
 function renderRow(row: Row) {
-	const country = countries[row.code];
-	const winner = row.winner.includes(country)
-		? row.winner
-		: `${row.winner} (${row.committee})`;
-	return `${medalEmoji[row.medal_type]}: ${winner}`;
-}
-
-function buildText(records: Row[]): string | undefined {
-	let retries = 0;
-	while (retries < 5) {
-		retries += 1;
-		const { olympiad, sport, event, year, city, season } = _.sample(records) as Row;
-		const medals = _.filter(records, (row) => {
-			return olympiad == row.olympiad && sport == row.sport && event == row.event;
-		});
-		const topLine = `${city} ${year} - ${season} Olympics\n${sport} - ${event}`;
-		const { Gold, Silver, Bronze } = _.groupBy(medals, "medal_type");
-		const medalStrs = _.chain(_.concat(Gold, Silver, Bronze))
-			.map(renderRow)
-			.join("\n");
-		const result = `${topLine}\n\n${medalStrs}`;
-		if (result.length < 300) {
-			return result;
-		}
+	try {
+		const winner = row.winner.includes(row.country)
+			? row.winner
+			: `${row.winner} (${row.country})`;
+		return `${medalEmoji[row.medal]}: ${winner}`;
+	} catch (ex) {
+		console.log(`row: ${row}`);
+		throw ex;
 	}
 }
 
-export default async function getPostText() {
+export function buildText(record: Row, records: Row[]) {
+	const { season, year, month, day, sport, event, city } = record;
+	const medals = _.filter(records, { season, year, month, day, sport, event });
+	const topLine = `${city} ${year} - ${season} Olympics\n${sport} - ${event}`;
+	const { Gold, Silver, Bronze } = _.groupBy(medals, "medal");
+	const medalStrs = _.chain(_.concat(Gold || [], Silver || [], Bronze || []))
+		.map(renderRow)
+		.join("\n");
+	return {
+		text: `${topLine}\n\n${medalStrs}`,
+		link: `https://www.olympedia.org${record.url}`,
+	};
+}
+
+export async function testAll() {
 	const records = await processFile();
-	return buildText(records);
+	for (const record of records) {
+		buildText(record, records);
+	}
+}
+
+export async function getPostText() {
+	const records = await processFile();
+	const record = _.sample(records) as Row;
+	const ret = buildText(record, records);
+	const rt = new RichText({ text: `${ret.text}\n\n\n${ret.link}` });
+	await rt.detectFacets(new AtpAgent({ service: "https://bsky.social" }));
+	return { text: rt.text, facets: rt.facets as Facet[] };
 }
