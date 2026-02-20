@@ -13,7 +13,7 @@ interface BotOptions {
 }
 
 export default class Bot {
-	agent;
+	#agent;
 
 	static defaultOptions: BotOptions = {
 		service: bskyService,
@@ -21,28 +21,32 @@ export default class Bot {
 	} as const;
 
 	constructor(service: AtpAgentOptions["service"]) {
-		this.agent = new AtpAgent({ service });
+		this.#agent = new AtpAgent({ service });
 	}
 
 	login(loginOpts: AtpAgentLoginOpts) {
-		return this.agent.login(loginOpts);
+		return this.#agent.login(loginOpts);
 	}
 
-	async post(
-		text:
-			| string
-			| (Partial<AppBskyFeedPost.Record> & Omit<AppBskyFeedPost.Record, "createdAt">),
-	) {
-		if (typeof text === "string") {
-			const richText = new RichText({ text });
-			await richText.detectFacets(this.agent);
-			const record = {
+	async post(record: { text: string; facets: Facet[] | undefined }) {
+		return this.#agent.post(record);
+	}
+
+	async buildRecord(
+		post: string | { text: string; facets: Facet[] },
+	): Promise<{ text: string; facets: Facet[] | undefined }> {
+		if (typeof post === "string") {
+			const richText = new RichText({ text: post });
+			await richText.detectFacets(this.#agent);
+			return {
 				text: richText.text,
 				facets: richText.facets,
 			};
-			return this.agent.post(record);
 		} else {
-			return this.agent.post(text);
+			return {
+				text: post.text.trim(),
+				facets: post.facets,
+			};
 		}
 	}
 
@@ -56,18 +60,12 @@ export default class Bot {
 			: this.defaultOptions;
 		const bot = new Bot(service);
 		await bot.login(bskyAccount);
-		const record =
-			typeof post === "string"
-				? post.trim()
-				: {
-						text: post.text.trim(),
-						facets: post.facets,
-					};
-		if (!dryRun) {
-			await bot.post(record);
-		} else {
+		const record = await bot.buildRecord(post);
+		if (dryRun) {
 			console.log(post);
+		} else {
+			await bot.post(record);
 		}
-		return post;
+		return record;
 	}
 }

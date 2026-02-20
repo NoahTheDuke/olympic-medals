@@ -79,5 +79,5 @@ export async function getPostText() {
 	const ret = buildText(record, records);
 	const rt = new RichText({ text: `${ret.text}\n\n\n${ret.link}` });
 	await rt.detectFacets(new AtpAgent({ service: "https://bsky.social" }));
-	return { text: rt.text, facets: rt.facets as Facet[] };
+	return { text: ret.text, facets: rt.facets as Facet[] };
 }

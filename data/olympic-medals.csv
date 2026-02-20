@@ -32,8 +32,8 @@ Summer,1896,4,9,Athina,Artistic Gymnastics,"Horizontal Bar, Men",/results/70005,
 Summer,1896,4,9,Athina,Artistic Gymnastics,"Horizontal Bar, Men",/results/70005,Silver,Alfred Flatow,Germany
 Summer,1896,4,9,Athina,Artistic Gymnastics,"Horizontal Bar, Teams, Men",/results/70001,Gold,Germany,Germany
 Summer,1896,4,9,Athina,Artistic Gymnastics,"Parallel Bars, Teams, Men",/results/70000,Gold,Germany,Germany
-Summer,1896,4,9,Athina,Artistic Gymnastics,"Parallel Bars, Teams, Men",/results/70000,Silver,,Greece
-Summer,1896,4,9,Athina,Artistic Gymnastics,"Parallel Bars, Teams, Men",/results/70000,Bronze,,Greece
+Summer,1896,4,9,Athina,Artistic Gymnastics,"Parallel Bars, Teams, Men",/results/70000,Silver,Greece,Greece
+Summer,1896,4,9,Athina,Artistic Gymnastics,"Parallel Bars, Teams, Men",/results/70000,Bronze,Greece,Greece
 Summer,1896,4,9,Athina,Artistic Gymnastics,"Pommelled Horse, Men",/results/70003,Gold,Louis Zutter,Switzerland
 Summer,1896,4,9,Athina,Artistic Gymnastics,"Pommelled Horse, Men",/results/70003,Silver,Hermann Weingärtner,Germany
 Summer,1896,4,9,Athina,Artistic Gymnastics,"Rings, Men",/results/70004,Gold,Ioannis Mitropoulos,Greece
@@ -110,58 +110,58 @@ Summer,1896,4,12,Athina,Shooting,"Free Rifle, Any Position, 300 metres, Men",/re
 Summer,1896,4,12,Athina,Shooting,"Free Rifle, Any Position, 300 metres, Men",/results/51504,Bronze,Viggo Jensen,Denmark
 Summer,1896,4,13,Athina,Cycling Track,"12-Hours Race, Men",/results/153004,Gold,Adolf Schmal,Austria
 Summer,1896,4,13,Athina,Cycling Track,"12-Hours Race, Men",/results/153004,Silver,Frederick Keeping,Great Britain
-Summer,1900,5,20,Paris,Sailing,"Open, Open",/results/9216,Gold,,Great Britain
-Summer,1900,5,20,Paris,Sailing,"Open, Open",/results/9216,Silver,,Germany
-Summer,1900,5,20,Paris,Sailing,"Open, Open",/results/9216,Bronze,,France
+Summer,1900,5,20,Paris,Sailing,"Open, Open",/results/9216,Gold,Scotia,Great Britain
+Summer,1900,5,20,Paris,Sailing,"Open, Open",/results/9216,Silver,Aschenbrödel,Germany
+Summer,1900,5,20,Paris,Sailing,"Open, Open",/results/9216,Bronze,Turquoise,France
 Summer,1900,5,21,Paris,Fencing,"Foil, Individual, Men",/results/72031,Gold,Émile Coste,France
 Summer,1900,5,21,Paris,Fencing,"Foil, Individual, Men",/results/72031,Silver,Henri Masson,France
 Summer,1900,5,21,Paris,Fencing,"Foil, Individual, Men",/results/72031,Bronze,Marcel Boulenger,France
-Summer,1900,5,22,Paris,Sailing,"0-½ Ton, Open",/results/9200,Gold,,France
-Summer,1900,5,22,Paris,Sailing,"0-½ Ton, Open",/results/9200,Silver,,France
-Summer,1900,5,22,Paris,Sailing,"0-½ Ton, Open",/results/9200,Bronze,,France
-Summer,1900,5,22,Paris,Sailing,"2-3 Ton, Open",/results/9206,Gold,,France
-Summer,1900,5,22,Paris,Sailing,"2-3 Ton, Open",/results/9206,Silver,,France
-Summer,1900,5,22,Paris,Sailing,"2-3 Ton, Open",/results/9206,Bronze,,France
-Summer,1900,5,24,Paris,Sailing,"0-½ Ton, Open",/results/9201,Gold,,France
-Summer,1900,5,24,Paris,Sailing,"0-½ Ton, Open",/results/9201,Silver,,France
-Summer,1900,5,24,Paris,Sailing,"0-½ Ton, Open",/results/9201,Bronze,,France
-Summer,1900,5,24,Paris,Sailing,"3-10 Ton, Open",/results/9208,Gold,,France
-Summer,1900,5,24,Paris,Sailing,"3-10 Ton, Open",/results/9208,Silver,,Netherlands
-Summer,1900,5,24,Paris,Sailing,"3-10 Ton, Open",/results/9208,Bronze,,France
-Summer,1900,5,24,Paris,Sailing,"½-1 Ton, Open",/results/9202,Gold,,Great Britain
-Summer,1900,5,24,Paris,Sailing,"½-1 Ton, Open",/results/9202,Silver,,France
-Summer,1900,5,24,Paris,Sailing,"½-1 Ton, Open",/results/9202,Bronze,,France
-Summer,1900,5,27,Paris,Sailing,"1-2 Ton, Open",/results/9205,Gold,,Germany
-Summer,1900,5,27,Paris,Sailing,"1-2 Ton, Open",/results/9205,Silver,,Switzerland
-Summer,1900,5,27,Paris,Sailing,"1-2 Ton, Open",/results/9205,Bronze,,France
-Summer,1900,5,27,Paris,Sailing,"2-3 Ton, Open",/results/9207,Gold,,France
-Summer,1900,5,27,Paris,Sailing,"2-3 Ton, Open",/results/9207,Silver,,France
-Summer,1900,5,27,Paris,Sailing,"2-3 Ton, Open",/results/9207,Bronze,,France
-Summer,1900,5,27,Paris,Sailing,"3-10 Ton, Open",/results/9209,Gold,,Great Britain
-Summer,1900,5,27,Paris,Sailing,"3-10 Ton, Open",/results/9209,Silver,,France
-Summer,1900,5,27,Paris,Sailing,"3-10 Ton, Open",/results/9209,Bronze,,United States
-Summer,1900,5,29,Paris,Equestrian Jumping,"Individual, Open",/results/185000,Gold,,Belgium
-Summer,1900,5,29,Paris,Equestrian Jumping,"Individual, Open",/results/185000,Silver,,Belgium
-Summer,1900,5,29,Paris,Equestrian Jumping,"Individual, Open",/results/185000,Bronze,,France
+Summer,1900,5,22,Paris,Sailing,"0-½ Ton, Open",/results/9200,Gold,Baby,France
+Summer,1900,5,22,Paris,Sailing,"0-½ Ton, Open",/results/9200,Silver,Quand-Même,France
+Summer,1900,5,22,Paris,Sailing,"0-½ Ton, Open",/results/9200,Bronze,Sarcelle,France
+Summer,1900,5,22,Paris,Sailing,"2-3 Ton, Open",/results/9206,Gold,Ollé,France
+Summer,1900,5,22,Paris,Sailing,"2-3 Ton, Open",/results/9206,Silver,Favourite,France
+Summer,1900,5,22,Paris,Sailing,"2-3 Ton, Open",/results/9206,Bronze,Gwendoline,France
+Summer,1900,5,24,Paris,Sailing,"0-½ Ton, Open",/results/9201,Gold,Fantlet,France
+Summer,1900,5,24,Paris,Sailing,"0-½ Ton, Open",/results/9201,Silver,Quand-Même,France
+Summer,1900,5,24,Paris,Sailing,"0-½ Ton, Open",/results/9201,Bronze,Baby,France
+Summer,1900,5,24,Paris,Sailing,"3-10 Ton, Open",/results/9208,Gold,Fémur,France
+Summer,1900,5,24,Paris,Sailing,"3-10 Ton, Open",/results/9208,Silver,Mascotte,Netherlands
+Summer,1900,5,24,Paris,Sailing,"3-10 Ton, Open",/results/9208,Bronze,Gitana,France
+Summer,1900,5,24,Paris,Sailing,"½-1 Ton, Open",/results/9202,Gold,Scotia,Great Britain
+Summer,1900,5,24,Paris,Sailing,"½-1 Ton, Open",/results/9202,Silver,Crabe II,France
+Summer,1900,5,24,Paris,Sailing,"½-1 Ton, Open",/results/9202,Bronze,Scamasaxe,France
+Summer,1900,5,27,Paris,Sailing,"1-2 Ton, Open",/results/9205,Gold,Aschenbrödel,Germany
+Summer,1900,5,27,Paris,Sailing,"1-2 Ton, Open",/results/9205,Silver,Lérina,Switzerland
+Summer,1900,5,27,Paris,Sailing,"1-2 Ton, Open",/results/9205,Bronze,Marthe,France
+Summer,1900,5,27,Paris,Sailing,"2-3 Ton, Open",/results/9207,Gold,Ollé,France
+Summer,1900,5,27,Paris,Sailing,"2-3 Ton, Open",/results/9207,Silver,Favourite,France
+Summer,1900,5,27,Paris,Sailing,"2-3 Ton, Open",/results/9207,Bronze,Mignon,France
+Summer,1900,5,27,Paris,Sailing,"3-10 Ton, Open",/results/9209,Gold,Bona Fide,Great Britain
+Summer,1900,5,27,Paris,Sailing,"3-10 Ton, Open",/results/9209,Silver,Gitana,France
+Summer,1900,5,27,Paris,Sailing,"3-10 Ton, Open",/results/9209,Bronze,Frimousse,United States
+Summer,1900,5,29,Paris,Equestrian Jumping,"Individual, Open",/results/185000,Gold,Aimé Haegeman,Belgium
+Summer,1900,5,29,Paris,Equestrian Jumping,"Individual, Open",/results/185000,Silver,Georges Van De Poele,Belgium
+Summer,1900,5,29,Paris,Equestrian Jumping,"Individual, Open",/results/185000,Bronze,Louis de Champsavin,France
 Summer,1900,5,29,Paris,Fencing,"Foil, Masters, Individual, Men",/results/72177,Gold,Lucien Mérignac,France
 Summer,1900,5,29,Paris,Fencing,"Foil, Masters, Individual, Men",/results/72177,Silver,Alphonse Kirchhoffer,France
 Summer,1900,5,29,Paris,Fencing,"Foil, Masters, Individual, Men",/results/72177,Bronze,Jean-Baptiste Mimiague,France
-Summer,1900,5,31,Paris,Equestrian Dressage,"Hacks and Hunter Combined, Open",/results/185003,Gold,,France
-Summer,1900,5,31,Paris,Equestrian Dressage,"Hacks and Hunter Combined, Open",/results/185003,Silver,,France
-Summer,1900,5,31,Paris,Equestrian Dressage,"Hacks and Hunter Combined, Open",/results/185003,Bronze,,France
-Summer,1900,5,31,Paris,Equestrian Jumping,"Long Jump, Open",/results/185002,Gold,,Belgium
-Summer,1900,5,31,Paris,Equestrian Jumping,"Long Jump, Open",/results/185002,Silver,,Italy
-Summer,1900,5,31,Paris,Equestrian Jumping,"Long Jump, Open",/results/185002,Bronze,,France
+Summer,1900,5,31,Paris,Equestrian Dressage,"Hacks and Hunter Combined, Open",/results/185003,Gold,Napoléon Murat,France
+Summer,1900,5,31,Paris,Equestrian Dressage,"Hacks and Hunter Combined, Open",/results/185003,Silver,Victor Archenoul,France
+Summer,1900,5,31,Paris,Equestrian Dressage,"Hacks and Hunter Combined, Open",/results/185003,Bronze,"Joseph, Marquis de Montesquiou-Fézensac",France
+Summer,1900,5,31,Paris,Equestrian Jumping,"Long Jump, Open",/results/185002,Gold,Constant Van Langhendonck,Belgium
+Summer,1900,5,31,Paris,Equestrian Jumping,"Long Jump, Open",/results/185002,Silver,"Giangiorgio, Conte Trissino",Italy
+Summer,1900,5,31,Paris,Equestrian Jumping,"Long Jump, Open",/results/185002,Bronze,Jacques de Prunelé,France
 Summer,1900,6,2,Paris,Equestrian Driving,"Four-In-Hand Competition, Open",/results/185004,Gold,Georges Nagelmackers,Belgium
 Summer,1900,6,2,Paris,Equestrian Driving,"Four-In-Hand Competition, Open",/results/185004,Silver,Léon Thome,France
 Summer,1900,6,2,Paris,Equestrian Driving,"Four-In-Hand Competition, Open",/results/185004,Bronze,"Jean, Baron de Neuflize",France
-Summer,1900,6,2,Paris,Equestrian Jumping,"High Jump, Open",/results/185001,Gold,,Italy
-Summer,1900,6,2,Paris,Equestrian Jumping,"High Jump, Open",/results/185001,Gold,,France
-Summer,1900,6,2,Paris,Equestrian Jumping,"High Jump, Open",/results/185001,Bronze,,Belgium
-Summer,1900,6,2,Paris,Polo,"Polo, Men",/results/30900,Gold,,Great Britain
-Summer,1900,6,2,Paris,Polo,"Polo, Men",/results/30900,Silver,,Great Britain
-Summer,1900,6,2,Paris,Polo,"Polo, Men",/results/30900,Bronze,,France
-Summer,1900,6,2,Paris,Polo,"Polo, Men",/results/30900,Bronze,,Mixed team
+Summer,1900,6,2,Paris,Equestrian Jumping,"High Jump, Open",/results/185001,Gold,"Giangiorgio, Conte Trissino",Italy
+Summer,1900,6,2,Paris,Equestrian Jumping,"High Jump, Open",/results/185001,Gold,Alfred Gardère,France
+Summer,1900,6,2,Paris,Equestrian Jumping,"High Jump, Open",/results/185001,Bronze,Georges Van De Poele,Belgium
+Summer,1900,6,2,Paris,Polo,"Polo, Men",/results/30900,Gold,Foxhunters Hurlingham,Great Britain
+Summer,1900,6,2,Paris,Polo,"Polo, Men",/results/30900,Silver,"BLO Polo Club, Rugby",Great Britain
+Summer,1900,6,2,Paris,Polo,"Polo, Men",/results/30900,Bronze,Polo Club de Paris,France
+Summer,1900,6,2,Paris,Polo,"Polo, Men",/results/30900,Bronze,A North American Team,Mixed team
 Summer,1900,6,14,Paris,Basque pelota,"Two-Man Teams with Cesta, Men",/results/28505,Gold,"Francisco Villota, José de Amézola",Spain
 Summer,1900,6,14,Paris,Fencing,"Épée, Individual, Men",/results/72112,Gold,Ramón Fonst,Cuba
 Summer,1900,6,14,Paris,Fencing,"Épée, Individual, Men",/results/72112,Silver,Louis Perrée,France
@@ -251,15 +251,15 @@ Summer,1900,7,16,Paris,Athletics,"Triple Jump, Men",/results/56100,Gold,Meyer Pr
 Summer,1900,7,16,Paris,Athletics,"Triple Jump, Men",/results/56100,Silver,James B. Connolly,United States
 Summer,1900,7,16,Paris,Athletics,"Triple Jump, Men",/results/56100,Bronze,Lewis Sheldon,United States
 Summer,1900,7,16,Paris,Tug-Of-War,"Tug-Of-War, Men",/results/21100,Gold,Mixed team,Mixed team
-Summer,1900,7,16,Paris,Tug-Of-War,"Tug-Of-War, Men",/results/21100,Silver,,France
+Summer,1900,7,16,Paris,Tug-Of-War,"Tug-Of-War, Men",/results/21100,Silver,Racing Club de France,France
 Summer,1900,7,19,Paris,Athletics,"Marathon, Men",/results/56066,Gold,Michel Théato,France
 Summer,1900,7,19,Paris,Athletics,"Marathon, Men",/results/56066,Silver,Émile Champion,France
 Summer,1900,7,19,Paris,Athletics,"Marathon, Men",/results/56066,Bronze,Ernst Fast,Sweden
 Summer,1900,7,22,Paris,Athletics,"200 metres, Men",/results/56048,Gold,Walter Tewksbury,United States
 Summer,1900,7,22,Paris,Athletics,"200 metres, Men",/results/56048,Silver,Norman Pritchard,India
 Summer,1900,7,22,Paris,Athletics,"200 metres, Men",/results/56048,Bronze,Stan Rowley,Australia
-Summer,1900,7,22,Paris,Athletics,"5,000 metres, Team, Men",/results/56088,Gold,,Great Britain
-Summer,1900,7,22,Paris,Athletics,"5,000 metres, Team, Men",/results/56088,Silver,,France
+Summer,1900,7,22,Paris,Athletics,"5,000 metres, Team, Men",/results/56088,Gold,Amateur Athletic Association,Great Britain
+Summer,1900,7,22,Paris,Athletics,"5,000 metres, Team, Men",/results/56088,Silver,Racing Club de France,France
 Summer,1900,7,22,Paris,Croquet,"Doubles, Open",/results/39517,Gold,"Georges Johin, Gaston Aumoitte",France
 Summer,1900,7,30,Paris,Artistic Gymnastics,"Individual All-Around, Men",/results/70008,Gold,Gustave Sandras,France
 Summer,1900,7,30,Paris,Artistic Gymnastics,"Individual All-Around, Men",/results/70008,Silver,Noël Bas,France
@@ -270,9 +270,9 @@ Summer,1900,8,1,Paris,Shooting,"Free Pistol, 50 metres, Men",/results/51509,Bron
 Summer,1900,8,1,Paris,Shooting,"Free Pistol, 50 metres, Team, Men",/results/51515,Gold,Switzerland,Switzerland
 Summer,1900,8,1,Paris,Shooting,"Free Pistol, 50 metres, Team, Men",/results/51515,Silver,France,France
 Summer,1900,8,1,Paris,Shooting,"Free Pistol, 50 metres, Team, Men",/results/51515,Bronze,Netherlands,Netherlands
-Summer,1900,8,2,Paris,Sailing,"20+ Ton, Open",/results/9215,Gold,,Great Britain
-Summer,1900,8,2,Paris,Sailing,"20+ Ton, Open",/results/9215,Silver,,Great Britain
-Summer,1900,8,2,Paris,Sailing,"20+ Ton, Open",/results/9215,Bronze,,United States
+Summer,1900,8,2,Paris,Sailing,"20+ Ton, Open",/results/9215,Gold,Cicely,Great Britain
+Summer,1900,8,2,Paris,Sailing,"20+ Ton, Open",/results/9215,Silver,Brynhild,Great Britain
+Summer,1900,8,2,Paris,Sailing,"20+ Ton, Open",/results/9215,Bronze,Formosa,United States
 Summer,1900,8,5,Paris,Shooting,"Free Rifle, Kneeling, 300 metres, Men",/results/51512,Gold,Konrad Stäheli,Switzerland
 Summer,1900,8,5,Paris,Shooting,"Free Rifle, Kneeling, 300 metres, Men",/results/51512,Silver,Anders Peter Nielsen,Denmark
 Summer,1900,8,5,Paris,Shooting,"Free Rifle, Kneeling, 300 metres, Men",/results/51512,Silver,Emil Kellenberger,Switzerland
@@ -286,9 +286,9 @@ Summer,1900,8,5,Paris,Shooting,"Free Rifle, Three Positions, 300 metres, Men",/r
 Summer,1900,8,5,Paris,Shooting,"Free Rifle, Three Positions, 300 metres, Team, Men",/results/51516,Gold,Switzerland,Switzerland
 Summer,1900,8,5,Paris,Shooting,"Free Rifle, Three Positions, 300 metres, Team, Men",/results/51516,Silver,Norway,Norway
 Summer,1900,8,5,Paris,Shooting,"Free Rifle, Three Positions, 300 metres, Team, Men",/results/51516,Bronze,France,France
-Summer,1900,8,6,Paris,Sailing,"10-20 Ton, Open",/results/9210,Gold,,France
-Summer,1900,8,6,Paris,Sailing,"10-20 Ton, Open",/results/9210,Silver,,France
-Summer,1900,8,6,Paris,Sailing,"10-20 Ton, Open",/results/9210,Bronze,,Great Britain
+Summer,1900,8,6,Paris,Sailing,"10-20 Ton, Open",/results/9210,Gold,Estérel,France
+Summer,1900,8,6,Paris,Sailing,"10-20 Ton, Open",/results/9210,Silver,Quand-Même,France
+Summer,1900,8,6,Paris,Sailing,"10-20 Ton, Open",/results/9210,Bronze,Laurea,Great Britain
 Summer,1900,8,12,Paris,Swimming,"1,000 metres Freestyle, Men",/results/4412,Gold,John Jarvis,Great Britain
 Summer,1900,8,12,Paris,Swimming,"1,000 metres Freestyle, Men",/results/4412,Silver,Otto Wahle,Austria
 Summer,1900,8,12,Paris,Swimming,"1,000 metres Freestyle, Men",/results/4412,Bronze,Zoltán Halmay,Hungary
@@ -298,13 +298,13 @@ Summer,1900,8,12,Paris,Swimming,"200 metres Freestyle, Men",/results/4404,Bronze
 Summer,1900,8,12,Paris,Swimming,"200 metres Obstacle Course, Men",/results/4433,Gold,Fred Lane,Great Britain
 Summer,1900,8,12,Paris,Swimming,"200 metres Obstacle Course, Men",/results/4433,Silver,Otto Wahle,Austria
 Summer,1900,8,12,Paris,Swimming,"200 metres Obstacle Course, Men",/results/4433,Bronze,Peter Kemp,Great Britain
-Summer,1900,8,12,Paris,Swimming,"200 metres Team Swimming, Men",/results/4441,Gold,,Germany
-Summer,1900,8,12,Paris,Swimming,"200 metres Team Swimming, Men",/results/4441,Silver,,France
-Summer,1900,8,12,Paris,Swimming,"200 metres Team Swimming, Men",/results/4441,Bronze,,France
-Summer,1900,8,12,Paris,Water Polo,"Water Polo, Men",/results/38000,Gold,,Great Britain
-Summer,1900,8,12,Paris,Water Polo,"Water Polo, Men",/results/38000,Silver,,Belgium
-Summer,1900,8,12,Paris,Water Polo,"Water Polo, Men",/results/38000,Bronze,,France
-Summer,1900,8,12,Paris,Water Polo,"Water Polo, Men",/results/38000,Bronze,,France
+Summer,1900,8,12,Paris,Swimming,"200 metres Team Swimming, Men",/results/4441,Gold,Deutscher Schwimm Verband Berlin,Germany
+Summer,1900,8,12,Paris,Swimming,"200 metres Team Swimming, Men",/results/4441,Silver,Tritons Lillois,France
+Summer,1900,8,12,Paris,Swimming,"200 metres Team Swimming, Men",/results/4441,Bronze,Pupilles de Neptune de Lille,France
+Summer,1900,8,12,Paris,Water Polo,"Water Polo, Men",/results/38000,Gold,"Osborne Swimming Club, Manchester",Great Britain
+Summer,1900,8,12,Paris,Water Polo,"Water Polo, Men",/results/38000,Silver,"Brussels Swimming and Water Polo Club",Belgium
+Summer,1900,8,12,Paris,Water Polo,"Water Polo, Men",/results/38000,Bronze,"Libellule de Paris",France
+Summer,1900,8,12,Paris,Water Polo,"Water Polo, Men",/results/38000,Bronze,"Pupilles de Neptune de Lille #2",France
 Summer,1900,8,13,Paris,Archery,"Au Chapelet, 33 metres, Men",/results/40504,Gold,Hubert Van Innis,Belgium
 Summer,1900,8,13,Paris,Archery,"Au Chapelet, 33 metres, Men",/results/40504,Silver,Victor Thibault,France
 Summer,1900,8,13,Paris,Archery,"Au Chapelet, 33 metres, Men",/results/40504,Bronze,Frédéric Petit,France
@@ -320,63 +320,63 @@ Summer,1900,8,13,Paris,Archery,"Au Cordon Doré, 50 metres, Men",/results/40501,
 Summer,1900,8,19,Paris,Swimming,"4,000 metres Freestyle, Men",/results/4419,Gold,John Jarvis,Great Britain
 Summer,1900,8,19,Paris,Swimming,"4,000 metres Freestyle, Men",/results/4419,Silver,Zoltán Halmay,Hungary
 Summer,1900,8,19,Paris,Swimming,"4,000 metres Freestyle, Men",/results/4419,Bronze,Louis Martin,France
-Summer,1900,8,20,Paris,Cricket,"Cricket, Men",/results/21150,Gold,,Great Britain
-Summer,1900,8,20,Paris,Cricket,"Cricket, Men",/results/21150,Silver,,France
+Summer,1900,8,20,Paris,Cricket,"Cricket, Men",/results/21150,Gold,"Devon and Somerset Wanderers",Great Britain
+Summer,1900,8,20,Paris,Cricket,"Cricket, Men",/results/21150,Silver,"Union des Sociétés Français de Sports Athletiques",France
 Summer,1900,8,26,Paris,Archery,"Championnat du Monde, Men",/results/40500,Gold,Henri Hérouin,France
 Summer,1900,8,26,Paris,Archery,"Championnat du Monde, Men",/results/40500,Silver,Hubert Van Innis,Belgium
-Summer,1900,8,26,Paris,Rowing,"Eights, Men",/results/157523,Gold,,United States
-Summer,1900,8,26,Paris,Rowing,"Eights, Men",/results/157523,Silver,,Belgium
-Summer,1900,8,26,Paris,Rowing,"Eights, Men",/results/157523,Bronze,,Netherlands
+Summer,1900,8,26,Paris,Rowing,"Eights, Men",/results/157523,Gold,Vesper Boat Club,United States
+Summer,1900,8,26,Paris,Rowing,"Eights, Men",/results/157523,Silver,Royal Club Nautique de Gand,Belgium
+Summer,1900,8,26,Paris,Rowing,"Eights, Men",/results/157523,Bronze,Minerva Amsterdam,Netherlands
 Summer,1900,8,26,Paris,Rowing,"Single Sculls, Men",/results/157500,Gold,Hermann Barrelet,France
 Summer,1900,8,26,Paris,Rowing,"Single Sculls, Men",/results/157500,Silver,André Gaudin,France
 Summer,1900,8,26,Paris,Rowing,"Single Sculls, Men",/results/157500,Bronze,St George Ashe,Great Britain
-Summer,1900,8,27,Paris,Rowing,"Coxed Fours, Men",/results/157517,Gold,,Germany
-Summer,1900,8,27,Paris,Rowing,"Coxed Fours, Men",/results/157517,Silver,,Netherlands
-Summer,1900,8,27,Paris,Rowing,"Coxed Fours, Men",/results/157517,Bronze,,Germany
+Summer,1900,8,27,Paris,Rowing,"Coxed Fours, Men",/results/157517,Gold,"Germania Ruder Club, Hamburg",Germany
+Summer,1900,8,27,Paris,Rowing,"Coxed Fours, Men",/results/157517,Silver,Minerva Amsterdam,Netherlands
+Summer,1900,8,27,Paris,Rowing,"Coxed Fours, Men",/results/157517,Bronze,Ludwigshafener Ruder Verein,Germany
 Summer,1900,9,15,Paris,Cycling Track,"25 kilometres, Men",/results/153032,Gold,Louis Bastien,France
 Summer,1900,9,15,Paris,Cycling Track,"25 kilometres, Men",/results/153032,Silver,Lloyd Hildebrand,France
 Summer,1900,9,15,Paris,Cycling Track,"25 kilometres, Men",/results/153032,Bronze,Auguste Daumain,France
 Summer,1900,9,15,Paris,Cycling Track,"Points Race, Men",/results/153033,Gold,Enrico Brusoni,Italy
 Summer,1900,9,15,Paris,Cycling Track,"Points Race, Men",/results/153033,Silver,Karl Duill,Germany
 Summer,1900,9,15,Paris,Cycling Track,"Points Race, Men",/results/153033,Bronze,Louis Trousselier,France
-Summer,1900,9,23,Paris,Football,"Football, Men",/results/33500,Gold,,Great Britain
-Summer,1900,9,23,Paris,Football,"Football, Men",/results/33500,Silver,,France
-Summer,1900,9,23,Paris,Football,"Football, Men",/results/33500,Bronze,,Belgium
+Summer,1900,9,23,Paris,Football,"Football, Men",/results/33500,Gold,Upton Park FC,Great Britain
+Summer,1900,9,23,Paris,Football,"Football, Men",/results/33500,Silver,USFSA,France
+Summer,1900,9,23,Paris,Football,"Football, Men",/results/33500,Bronze,Univ. of Brussels,Belgium
 Summer,1900,10,2,Paris,Golf,"Individual, Men",/results/40000,Gold,Charles Sands,United States
 Summer,1900,10,2,Paris,Golf,"Individual, Men",/results/40000,Silver,Walter Rutherford,Great Britain
 Summer,1900,10,2,Paris,Golf,"Individual, Men",/results/40000,Bronze,David Robertson,Great Britain
 Summer,1900,10,3,Paris,Golf,"Individual, Women",/results/40001,Gold,Margaret Abbott,United States
 Summer,1900,10,3,Paris,Golf,"Individual, Women",/results/40001,Silver,Polly Whittier,Switzerland
 Summer,1900,10,3,Paris,Golf,"Individual, Women",/results/40001,Bronze,Abbie Pratt,France
-Summer,1900,10,28,Paris,Rugby,"Rugby, Men",/results/31500,Gold,,France
-Summer,1900,10,28,Paris,Rugby,"Rugby, Men",/results/31500,Silver,,Germany
-Summer,1900,10,28,Paris,Rugby,"Rugby, Men",/results/31500,Silver,,Great Britain
+Summer,1900,10,28,Paris,Rugby,"Rugby, Men",/results/31500,Gold,Union des Sociétés Français de Sports Athletiques,France
+Summer,1900,10,28,Paris,Rugby,"Rugby, Men",/results/31500,Silver,Frankfurt Club,Germany
+Summer,1900,10,28,Paris,Rugby,"Rugby, Men",/results/31500,Silver,Moseley Wanderers,Great Britain
 Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Individual All-Around, Field Sports, Men",/results/70020,Gold,Max Emmerich,United States
 Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Individual All-Around, Field Sports, Men",/results/70020,Silver,John Grieb,United States
 Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Individual All-Around, Field Sports, Men",/results/70020,Bronze,William Merz,United States
 Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Individual All-Around, Men",/results/70009,Gold,Julius Lenhart,United States
 Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Individual All-Around, Men",/results/70009,Silver,Wilhelm Weber,Germany
 Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Individual All-Around, Men",/results/70009,Bronze,Adolf Spinnler,Germany
-Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Team All-Around, Men",/results/70024,Gold,,United States
-Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Team All-Around, Men",/results/70024,Silver,,United States
-Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Team All-Around, Men",/results/70024,Bronze,,United States
+Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Team All-Around, Men",/results/70024,Gold,United States,United States
+Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Team All-Around, Men",/results/70024,Silver,United States,United States
+Summer,1904,7,2,St. Louis,Artistic Gymnastics,"Team All-Around, Men",/results/70024,Bronze,United States,United States
 Summer,1904,7,4,St. Louis,Athletics,"All-Around Championship, Men",/results/56152,Gold,Tom Kiely,Great Britain
 Summer,1904,7,4,St. Louis,Athletics,"All-Around Championship, Men",/results/56152,Silver,Adam Gunn,United States
 Summer,1904,7,4,St. Louis,Athletics,"All-Around Championship, Men",/results/56152,Bronze,Truxtun Hare,United States
-Summer,1904,7,7,St. Louis,Lacrosse,"Lacrosse, Men",/results/28500,Gold,,Canada
-Summer,1904,7,7,St. Louis,Lacrosse,"Lacrosse, Men",/results/28500,Silver,,United States
-Summer,1904,7,7,St. Louis,Lacrosse,"Lacrosse, Men",/results/28500,Bronze,,Canada
-Summer,1904,7,29,St. Louis,Rowing,"Coxless Fours, Men",/results/157531,Gold,,United States
-Summer,1904,7,29,St. Louis,Rowing,"Coxless Fours, Men",/results/157531,Silver,,United States
-Summer,1904,7,29,St. Louis,Rowing,"Coxless Fours, Men",/results/157531,Bronze,,United States
+Summer,1904,7,7,St. Louis,Lacrosse,"Lacrosse, Men",/results/28500,Gold,Winnipeg Shamrocks,Canada
+Summer,1904,7,7,St. Louis,Lacrosse,"Lacrosse, Men",/results/28500,Silver,St. Louis Amateur Athletic Association,United States
+Summer,1904,7,7,St. Louis,Lacrosse,"Lacrosse, Men",/results/28500,Bronze,Mohawk Indians,Canada
+Summer,1904,7,29,St. Louis,Rowing,"Coxless Fours, Men",/results/157531,Gold,Century Boat Club,United States
+Summer,1904,7,29,St. Louis,Rowing,"Coxless Fours, Men",/results/157531,Silver,Mound City Rowing Club,United States
+Summer,1904,7,29,St. Louis,Rowing,"Coxless Fours, Men",/results/157531,Bronze,Western Rowing Club,United States
 Summer,1904,7,29,St. Louis,Rowing,"Coxless Pairs, Men",/results/157530,Gold,"Robert Farnan, Joseph Ryan",United States
 Summer,1904,7,29,St. Louis,Rowing,"Coxless Pairs, Men",/results/157530,Silver,"John Mulcahy, Bill Varley",United States
 Summer,1904,7,29,St. Louis,Rowing,"Coxless Pairs, Men",/results/157530,Bronze,"John Joachim, Joe Buerger, Gus Voerg, Frank Dummerth",United States
 Summer,1904,7,30,St. Louis,Rowing,"Double Sculls, Men",/results/157529,Gold,"John Mulcahy, Bill Varley",United States
 Summer,1904,7,30,St. Louis,Rowing,"Double Sculls, Men",/results/157529,Silver,"Joseph McLoughlin, John Hoben",United States
 Summer,1904,7,30,St. Louis,Rowing,"Double Sculls, Men",/results/157529,Bronze,"Joe Ravannack, John Wells",United States
-Summer,1904,7,30,St. Louis,Rowing,"Eights, Men",/results/157532,Gold,,United States
-Summer,1904,7,30,St. Louis,Rowing,"Eights, Men",/results/157532,Silver,,Canada
+Summer,1904,7,30,St. Louis,Rowing,"Eights, Men",/results/157532,Gold,Vesper Boat Club,United States
+Summer,1904,7,30,St. Louis,Rowing,"Eights, Men",/results/157532,Silver,Toronto Argonauts,Canada
 Summer,1904,7,30,St. Louis,Rowing,"Single Sculls, Men",/results/157528,Gold,Frank Greer,United States
 Summer,1904,7,30,St. Louis,Rowing,"Single Sculls, Men",/results/157528,Silver,Jim Juvenal,United States
 Summer,1904,7,30,St. Louis,Rowing,"Single Sculls, Men",/results/157528,Bronze,Constance Titus,United States

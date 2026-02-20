@@ -10,7 +10,7 @@ if (!!process.env.RUNTEST) {
 
 	if (!opts.dryRun) {
 		if (text) {
-			console.log(`[${new Date().toISOString()}] Posted: "${text}"`);
+			console.log(`[${new Date().toISOString()}] Posted: "${text.text}"`);
 		} else {
 			console.log("Couldn't find a suitable result");
 		}
