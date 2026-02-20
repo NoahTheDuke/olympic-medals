@@ -59,7 +59,7 @@ function buildText(records: Row[]): string | undefined {
 		const medals = _.filter(records, (row) => {
 			return olympiad == row.olympiad && sport == row.sport && event == row.event;
 		});
-		const topLine = `${city} ${year} - ${season}\n${sport} - ${event}`;
+		const topLine = `${city} ${year} - ${season} Olympics\n${sport} - ${event}`;
 		const { Gold, Silver, Bronze } = _.groupBy(medals, "medal_type");
 		const medalStrs = _.chain(_.concat(Gold, Silver, Bronze))
 			.map(renderRow)

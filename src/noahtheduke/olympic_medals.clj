@@ -13,8 +13,7 @@
    [noahtheduke.splint.pattern :refer [pattern]])
   (:import
    [clojure.lang ExceptionInfo]
-   [java.util.concurrent TimeUnit]
-   [java.util.concurrent ConcurrentLinkedDeque]))
+   [java.util.concurrent TimeUnit]))
 
 (set! *warn-on-reflection* true)
 
@@ -29,8 +28,8 @@
 
 (def ds (jdbc/get-datasource "jdbc:sqlite:db/database.db"))
 
-(defn fmt
-  ([stmt] (fmt stmt nil))
+(defn sql-fmt
+  ([stmt] (sql-fmt stmt nil))
   ([stmt {:keys [debug] :as opts}]
    (let [qs (sql/format stmt)]
      (when debug
@@ -38,9 +37,9 @@
      qs)))
 
 (defn execute!
-  ([stmt] (execute! nil stmt))
-  ([opts stmt]
-   (let [qs (fmt stmt opts)]
+  ([stmt] (execute! stmt nil))
+  ([stmt opts]
+   (let [qs (sql-fmt stmt opts)]
      (jdbc/execute! ds qs {:return-keys true
                            :builder-fn rs/as-kebab-maps}))))
 
@@ -205,7 +204,6 @@
      (?* _)]))
 
 (defmethod get-links :sports [pending-url]
-  ; (prn :get-links/sports pending-url)
   (let [html (parse-page (:url pending-url))]
     (postwalk
      (fn [obj]
@@ -237,7 +235,6 @@
    '[:td (? _ map?) [:a {:href (? ?url event-url)} (? ?name string?)]]))
 
 (defmethod get-links :events [pending-url]
-  ; (prn :get-links/events pending-url)
   (let [html (parse-page (:url pending-url))]
     (postwalk
      (fn [obj]
@@ -316,15 +313,24 @@
 (defn format-date
   [?date]
   (-> ?date
-      (str/replace #"\d+ – (\d+)" "$1")
-      (str/replace #"(\d+) (.*) (\d\d\d\d)"
+      (str/replace #"\p{Pd}" "-")
+      (str/replace #"\d+ - (\d+ [A-Za-z])" "$1")
+      (str/replace #" - \d+:\d+" "")
+      (str/replace #"(\d+) (\S*) (\d\d\d\d)"
                    (fn [[_ day month year]]
                      (str year "-" (months->number month) "-" day)))))
 
+(comment
+  (format-date "19 – 21 January 2024 — 11:00"))
+
 (defmethod get-links :results [pending-url]
-  ; (prn :get-links/results pending-url)
   (let [html (parse-page (:url pending-url))
-        date (volatile! nil)]
+        date (volatile! nil)
+        insert (fn [row]
+                 (-> (h/insert-into :results)
+                     (h/values [row])
+                     (h/returning :*)
+                     (execute!)))]
     (postwalk
      (fn [obj]
        (when-not @date
@@ -334,40 +340,32 @@
      html)
     (postwalk
      (fn [obj]
-       (if-let [{:syms [?players ?NOC ?medal]} (position-pat obj)]
-         (let [athletes (keep athlete-pat ?players)]
-           (-> (h/insert-into :results)
-               (h/values [{:results/date @date
-                           :results/athlete (if (= 1 (count athletes))
-                                              ('?name (first athletes))
-                                              (str/join ", " (map '?name athletes)))
-                           :results/country (country-code->name ?NOC)
-                           :results/medal ?medal
-                           :results/game-id (-> pending-url :extra :games/id)
-                           :results/sport-id (-> pending-url :extra :sports/id)
-                           :results/event-id (-> pending-url :extra :events/id)}])
-               (h/returning :*)
-               (execute!)))
-         (when-let [{:syms [?team ?NOC ?medal]} (team-pat obj)]
-           (-> (h/insert-into :results)
-               (h/values [{:results/date @date
-                           :results/athlete (str "Team " ?team)
-                           :results/country ?NOC
-                           :results/medal ?medal
-                           :results/game-id (:games/id pending-url)
-                           :results/sport-id (:sports/id pending-url)
-                           :results/event-id (:events/id pending-url)}])
-               (h/returning :*)
-               (execute!))))
+       (if-let [{:syms [?team ?NOC ?medal]} (team-pat obj)]
+         (insert {:results/date @date
+                  :results/athlete ?team
+                  :results/country ?NOC
+                  :results/medal ?medal
+                  :results/game-id (-> pending-url :extra :games/id)
+                  :results/sport-id (-> pending-url :extra :sports/id)
+                  :results/event-id (-> pending-url :extra :events/id)})
+         (when-let [{:syms [?players ?NOC ?medal]} (position-pat obj)]
+           (let [athletes (keep athlete-pat ?players)]
+             (insert {:results/date @date
+                      :results/athlete (if (= 1 (count athletes))
+                                         ('?name (first athletes))
+                                         (str/join ", " (map '?name athletes)))
+                      :results/country (country-code->name ?NOC)
+                      :results/medal ?medal
+                      :results/game-id (-> pending-url :extra :games/id)
+                      :results/sport-id (-> pending-url :extra :sports/id)
+                      :results/event-id (-> pending-url :extra :events/id)}))))
        obj)
      html)
-    nil))
+    html))
 
 (comment
-  (get-links {:type :medal
-              :event/url "/results/44019"}))
-
-(defonce queue (ConcurrentLinkedDeque.))
+  (get-links {:type :results
+              :url "/results/9009310"}))
 
 (defn executor []
   (add-pending-url {:type :games :url "/editions"})
@@ -382,8 +380,18 @@
                (do (add-pending-url link)
                    (prn "sleeping")
                    (.sleep TimeUnit/SECONDS 30))
-               (throw ex))))
+               (do (prn ex)
+                   (throw ex)))))
       (recur))))
 
 (comment
   (executor))
+
+(defn get-rows []
+  (-> (h/select :g.year :g.city :s.name :e.name :e.url
+                :r.date :r.athlete :r.country :r.medal)
+      (h/from [:results :r])
+      (h/join [:games :g] [:= :g.id :r.game-id])
+      (h/join [:sports :s] [:= :s.id :r.sport-id])
+      (h/join [:events :e] [:= :e.id :r.event-id])
+      (execute!)))
