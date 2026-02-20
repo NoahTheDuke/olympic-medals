@@ -46,7 +46,7 @@ const medalEmoji = {
 function renderRow(row: Row) {
 	const country = countries[row.code];
 	const winner = row.winner.includes(country)
-		? `Team ${row.winner}`
+		? row.winner
 		: `${row.winner} (${row.committee})`;
 	return `${medalEmoji[row.medal_type]}: ${winner}`;
 }

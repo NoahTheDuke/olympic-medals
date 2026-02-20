@@ -343,7 +343,7 @@
        (if-let [{:syms [?team ?NOC ?medal]} (team-pat obj)]
          (insert {:results/date @date
                   :results/athlete ?team
-                  :results/country ?NOC
+                  :results/country (country-code->name ?NOC)
                   :results/medal ?medal
                   :results/game-id (-> pending-url :extra :games/id)
                   :results/sport-id (-> pending-url :extra :sports/id)
