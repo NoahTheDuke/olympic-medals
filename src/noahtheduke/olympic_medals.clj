@@ -293,7 +293,7 @@
      [:td (? _ map?) (? _ parse-pos)]
      (?*? _)
      [:td {:class "bib"} ?_]
-     [:td (? _ map?) (? ?winner string?)]
+     [:td (? _ map?) (?* ?winner)]
      [:td (? _ map?) [:a (?* _) (? ?NOC country-code->name)]]
      (?* _)
      [:td (? _ map?) [:span (? _ map?) (?| medal ["Gold" "Silver" "Bronze"])]]
@@ -323,6 +323,10 @@
      [:td (? _ map?) [:span (? _ map?) (?| medal ["Gold" "Silver" "Bronze"])]]
      (?* _)]))
 
+(def winner-pat
+  (pattern
+   '[:a (?* _) (? ?winner string?)]))
+
 (def months->number
   {"January" "01"
    "February" "02"
@@ -343,12 +347,13 @@
       (str/replace #"\p{Pd}" "-")
       (str/replace #"\d+[ A-Za-z]* +- +(\d+ +[A-Za-z])" "$1")
       (str/replace #" +- +\d+:\d+" "")
-      (str/replace #"(\d+) +(\S*) +(\d\d\d\d)"
-                   (fn [[_ day month year]]
-                     (format "%04d-%02d-%02d"
-                             (parse-long year)
-                             (parse-long (months->number month))
-                             (parse-long day))))))
+      (->> (re-matches #".*?(\d+) +(\S*) +(\d\d\d\d)"))
+      ((fn [[_ day month year]]
+         (format "%04d-%02d-%02d"
+                 (parse-long year)
+                 (parse-long (months->number month))
+                 (parse-long day))))
+      ))
 
 (comment
   (format-date "2 –  7 July 1904"))
@@ -357,15 +362,16 @@
   (let [html (parse-page (:url pending-url))
         date (volatile! nil)
         insert (fn [row]
+                 (prn row)#_
                  (-> (h/insert-into :results)
-                       (h/values [row])
-                       (h/returning :*)
-                       (execute!)))]
+                     (h/values [row])
+                     (h/returning :*)
+                     (execute!)))]
     (postwalk
      (fn [obj]
        (when-not @date
          (when-let [d (date-pat obj)]
-           (vreset! date (format-date ('?date d)))))
+           (vreset! date (format-date ('?date d "")))))
        obj)
      html)
     (postwalk
@@ -377,21 +383,26 @@
                string-match (delay (string-pat obj))]
            (when-let [{:syms [?winner ?NOC ?medal]} (or @team-match @bib-match
                                                         @player-match @string-match)]
-             (insert {:type :position-match
-                      :results/date @date
-                      :results/athlete ?winner
-                      :results/country (country-code->name ?NOC)
-                      :results/medal ?medal
-                      :results/game-id (-> pending-url :extra :games/id)
-                      :results/sport-id (-> pending-url :extra :sports/id)
-                      :results/event-id (-> pending-url :extra :events/id)}))))
+             (let [winner (if (sequential? ?winner)
+                            (->> ?winner
+                                 (keep winner-pat)
+                                 (keep '?winner)
+                                 (str/join ", "))
+                            ?winner)]
+               (insert {:results/date @date
+                        :results/athlete winner
+                        :results/country (country-code->name ?NOC)
+                        :results/medal ?medal
+                        :results/game-id (-> pending-url :extra :games/id)
+                        :results/sport-id (-> pending-url :extra :sports/id)
+                        :results/event-id (-> pending-url :extra :events/id)})))))
        obj)
      html)
     nil))
 
 (comment
   (get-links {:type :results
-              :url "/results/354"}))
+              :url "/results/40042"}))
 
 (defn executor []
   (add-pending-url {:type :games :url "/editions"})
@@ -457,3 +468,56 @@
                  (mapv #(-> % set-date set-season))
                  (sort-by (juxt :results/date :sports/name :events/name #({"Gold" 1 "Silver" 2 "Bronze" 3} (:results/medal %))))
                  (mapv map->csv))))))
+
+(defn csv-data->maps [csv-data]
+  (map zipmap
+       (->> (first csv-data)
+            (map keyword)
+            repeat)
+	  (rest csv-data)))
+
+(def v1
+  (with-open [reader (io/reader "./data/olympic-medals.csv")]
+    (->> (csv/read-csv reader)
+         (csv-data->maps)
+         (mapv #(-> %
+                    (update :year parse-long)
+                    (update :month parse-long)
+                    (update :day parse-long))))))
+
+(def v4
+  (group-by (juxt :season :year :month :day :city :sport :event :url :medal :country)
+            v1))
+
+(def temp
+  (->> (vals v4)
+       (mapcat (fn [row]
+                 (if (= 1 (count row))
+                   row
+                   (remove #(#{"" "-"} (:winner %)) row))))))
+
+(defn set-by [f coll]
+  (persistent!
+   (reduce
+    (fn [ret x]
+      (let [k (f x)]
+        (assoc! ret k (conj (get ret k #{}) x))))
+    (transient {}) coll)))
+
+(def v3
+  (set-by (juxt :url :medal) v1))
+
+(def v3->csv
+  (juxt :season :year :month :day :city :sport :event :url :medal :winner :country))
+
+(def v3-sorter
+  (juxt :year #(format "%02d" (:month %)) #(format "%02d" (:day %))
+        :sport :event #({"Gold" 1 "Silver" 2 "Bronze" 3} (:medal %)) :winner))
+
+(comment
+  (with-open [writer (io/writer "./data/olympic-medals-2.csv")]
+    (csv/write-csv writer
+      (into [["season" "year" "month" "day" "city" "sport" "event" "url" "medal" "winner" "country"]]
+            (->> temp
+                 (sort-by v3-sorter)
+                 (mapv v3->csv))))))
