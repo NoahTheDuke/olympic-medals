@@ -2,7 +2,8 @@ import fs from "node:fs";
 import { parse } from "csv-parse";
 import { finished } from "stream/promises";
 import _ from "lodash";
-import { AtpAgent, Facet, RichText } from "@atproto/api";
+import { AtpAgent, Facet, FacetLink, RichText } from "@atproto/api";
+import { isLink } from "@atproto/api/dist/client/types/app/bsky/richtext/facet.js";
 
 // season,year,month,day,city,sport,event,url,medal,winner,country
 interface Row {
@@ -62,7 +63,8 @@ export function buildText(record: Row, records: Row[]) {
 		.join("\n");
 	return {
 		text: `${topLine}\n\n${medalStrs}`,
-		link: `https://www.olympedia.org${record.url}`,
+		title: event,
+		uri: `https://www.olympedia.org${record.url}`,
 	};
 }
 
@@ -77,7 +79,16 @@ export async function getPostText() {
 	const records = await processFile();
 	const record = _.sample(records) as Row;
 	const ret = buildText(record, records);
-	const rt = new RichText({ text: `${ret.text}\n\n\n${ret.link}` });
-	await rt.detectFacets(new AtpAgent({ service: "https://bsky.social" }));
-	return { text: ret.text, facets: rt.facets as Facet[] };
+	const post = {
+		text: ret.text,
+		embed: {
+			$type: "app.bsky.embed.external",
+			external: {
+				uri: ret.uri,
+				title: `Olympedia - ${ret.title}`,
+				description: "",
+			},
+		},
+	};
+	return post;
 }

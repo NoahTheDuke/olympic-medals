@@ -494,7 +494,7 @@
        (mapcat (fn [row]
                  (if (= 1 (count row))
                    row
-                   (remove #(#{"" "-"} (:winner %)) row))))))
+                   (remove #(#{"" "-" "–"} (:winner %)) row))))))
 
 (defn set-by [f coll]
   (persistent!
