@@ -62,10 +62,16 @@ export function buildText(record: Row, records: Row[]) {
 		.map(renderRow)
 		.join("\n");
 	return {
-		text: `${topLine}\n\n${medalStrs}`,
-		title: event,
-		uri: `https://www.olympedia.org${record.url}`,
-	};
+			text: `${topLine}\n\n${medalStrs}`,
+			embed: {
+				$type: "app.bsky.embed.external",
+				external: {
+					uri: `https://www.olympedia.org${record.url}`,
+					title: `Olympedia - ${event}`,
+					description: "",
+				},
+			},
+		}
 }
 
 export async function testAll() {
@@ -78,17 +84,5 @@ export async function testAll() {
 export async function getPostText() {
 	const records = await processFile();
 	const record = _.sample(records) as Row;
-	const ret = buildText(record, records);
-	const post = {
-		text: ret.text,
-		embed: {
-			$type: "app.bsky.embed.external",
-			external: {
-				uri: ret.uri,
-				title: `Olympedia - ${ret.title}`,
-				description: "",
-			},
-		},
-	};
-	return post;
+	return buildText(record, records);
 }

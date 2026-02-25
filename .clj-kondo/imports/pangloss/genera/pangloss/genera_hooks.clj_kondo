@@ -1,0 +1,24 @@
+(ns pangloss.genera-hooks)
+
+(defmacro defgenera
+  "Do not use. This is for clj-kondo linting / lsp support only"
+  [name arity & fn-tail]
+  `(defn ~name ~@fn-tail))
+
+
+(defmacro defgenera*
+  "Do not use. This is for clj-kondo linting / lsp support only"
+  [name arity & etc]
+  `(defn ~name [~@(repeat arity gensym)] ~@etc))
+
+
+(defmacro defgenera=
+  "Do not use. This is for clj-kondo linting / lsp support only"
+  [name arity & etc]
+  `(defn ~name [~@(repeat arity gensym)] ~@etc))
+
+
+(defmacro defgen
+  "Do not use. This is for clj-kondo linting / lsp support only"
+  [name dispatch & etc]
+  `(defn ~name ~@etc))

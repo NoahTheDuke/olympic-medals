@@ -1,9 +1,12 @@
 (ns noahtheduke.olympic-medals
   (:require
+   [babashka.fs :as fs]
    [clj-http.client :as client]
    [clojure.data.csv :as csv]
    [clojure.data.json :as json]
+   [clojure.edn :as edn]
    [clojure.java.io :as io]
+   [clojure.set :as set]
    [clojure.string :as str]
    [clojure.walk :refer [postwalk]]
    [hickory.core :refer [as-hiccup parse]]
@@ -21,7 +24,8 @@
 (set! *warn-on-reflection* true)
 
 (defn json->str [json]
-  (json/read-str json {:key-fn keyword}))
+  (when json
+    (json/read-str json {:key-fn keyword})))
 
 (defn str->json [s]
   (json/write-str s {:key-fn (fn [k]
@@ -73,6 +77,7 @@
 (-> (h/create-table :results :if-not-exists)
     (h/with-columns
       [:id :integer [:primary-key] :autoincrement [:not nil]]
+      [:status :text]
       [:date :text]
       [:athlete :text]
       [:country :text]
@@ -145,10 +150,16 @@
       (execute!))
   nil)
 
+(defn unsee-url [url]
+  (-> (h/delete-from :seen-urls)
+      (h/where [:= :url url])
+      (execute!))
+  nil)
+
 
 (defn link-dispatch [pending-url] (:type pending-url))
 
-(defmulti get-links {:arglists '([pending-url])} #'link-dispatch)
+(defmulti get-links {:arglists '([{:as pending-url :keys [type url extra html]}])} #'link-dispatch)
 (defmethod get-links :default [pending-url] (throw (ex-info "default" pending-url)))
 
 (def base-url
@@ -156,10 +167,14 @@
 
 (defn parse-page
   [fragment]
-  (-> (client/get (str base-url fragment))
-      :body
-      (parse)
-      (as-hiccup)))
+  (let [html (-> (client/get (str base-url fragment))
+               :body
+               (parse)
+               (as-hiccup))
+        path (io/file "data" "olympedia" (str (subs fragment 1) ".edn"))]
+    (io/make-parents path)
+    (spit path (pr-str html))
+    html))
 
 (def game-pat
   (pattern
@@ -172,7 +187,7 @@
      (?* _)]))
 
 (defmethod get-links :games [pending-url]
-  (let [html (parse-page (:url pending-url))]
+  (let [html (or (:html pending-url) (parse-page (:url pending-url)))]
     (postwalk
      (fn [obj]
        (when-let [{:syms [?year ?city ?url]} (game-pat obj)]
@@ -206,7 +221,7 @@
      (?* _)]))
 
 (defmethod get-links :sports [pending-url]
-  (let [html (parse-page (:url pending-url))]
+  (let [html (or (:html pending-url) (parse-page (:url pending-url)))]
     (postwalk
      (fn [obj]
        (when-let [{:syms [?url ?name]} (sport-pat obj)]
@@ -236,7 +251,7 @@
    '[:td (? _ map?) [:a {:href (? ?url event-url)} (? ?name string?)]]))
 
 (defmethod get-links :events [pending-url]
-  (let [html (parse-page (:url pending-url))]
+  (let [html (or (:html pending-url) (parse-page (:url pending-url)))]
     (postwalk
      (fn [obj]
        (when-let [{:syms [?url ?name]} (event-pat obj)]
@@ -258,6 +273,10 @@
   (get-links {:type :event
               :sport/url "/editions/1/sports/WRE"}))
 
+(def status-pat
+  (pattern
+   '[:tr {} [:th {} "Status"] [:td {} ?status]]))
+
 (def date-pat
   (pattern
    '[:table {:class "biodata"} (?* _)
@@ -275,12 +294,23 @@
   (when (string? p)
     (parse-long (if (str/starts-with? p "=") (subs p 1) p))))
 
-(def team-pat
+(def country-pat
   (pattern
    '[:tr (? _ map?)
      [:td (? _ map?) (? _ parse-pos)]
      (?* _)
      [:td (? _ map?) (? ?winner country-names)]
+     [:td (? _ map?) [:a (?* _) (? ?NOC country-code->name)]]
+     (?* _)
+     [:td (? _ map?) [:span (? _ map?) (?| ?medal ["Gold" "Silver" "Bronze"])]]
+     (?* _)]))
+
+(def accordian-pat
+  (pattern
+   '[:tr (? _ map?)
+     [:td {:class "accordion-toggle"} ?_]
+     [:td (? _ map?) (? _ parse-pos)]
+     [:td (? _ map?) (? ?winner)]
      [:td (? _ map?) [:a (?* _) (? ?NOC country-code->name)]]
      (?* _)
      [:td (? _ map?) [:span (? _ map?) (?| ?medal ["Gold" "Silver" "Bronze"])]]
@@ -292,7 +322,7 @@
      (?*? _)
      [:td (? _ map?) (? _ parse-pos)]
      (?*? _)
-     [:td {:class "bib"} ?_]
+     [:td {:class "bib"} ??_]
      [:td (? _ map?) (?* ?winner)]
      [:td (? _ map?) [:a (?* _) (? ?NOC country-code->name)]]
      (?* _)
@@ -323,9 +353,28 @@
      [:td (? _ map?) [:span (? _ map?) (?| medal ["Gold" "Silver" "Bronze"])]]
      (?* _)]))
 
+(def team-pat-impl
+  (pattern
+   '[:tr (? _ map?)
+     [:td (? _ map?) (? _ parse-pos)]
+     (?* _)
+     [:td (? _ map?) (?* ?winner)]
+     [:td (? _ map?) [:a (?* _) (? ?NOC country-code->name)]]
+     (?* _)
+     [:td (? _ map?) [:span (? _ map?) (?| ?medal ["Gold" "Silver" "Bronze"])]]
+     (?* _)]))
+
 (def winner-pat
   (pattern
    '[:a (?* _) (? ?winner string?)]))
+
+(defn team-pat [obj]
+  (when-let [{:syms [?winner ?NOC] :as match} (team-pat-impl obj)]
+    (when (and (sequential? ?winner)
+          (every? (fn [w] (or (string? w) (winner-pat w))) ?winner))
+      (if (= "MIX" ?NOC)
+      (assoc match '?winner "MIX")
+        match))))
 
 (def months->number
   {"January" "01"
@@ -343,86 +392,156 @@
 
 (defn format-date
   [?date]
-  (-> ?date
+  (try (-> ?date
       (str/replace #"\p{Pd}" "-")
       (str/replace #"\d+[ A-Za-z]* +- +(\d+ +[A-Za-z])" "$1")
       (str/replace #" +- +\d+:\d+" "")
-      (->> (re-matches #".*?(\d+) +(\S*) +(\d\d\d\d)"))
-      ((fn [[_ day month year]]
+      (->> (re-matches #".*?(\d+) +(\S*) +(\d\d\d\d).*"))
+      ((fn [[_ day month year :as e]]
          (format "%04d-%02d-%02d"
                  (parse-long year)
                  (parse-long (months->number month))
-                 (parse-long day))))
-      ))
+                 (parse-long day)))))
+    (catch Exception ex
+      ; (prn ex)
+      "XXXX-XX-XXX")))
 
 (comment
-  (format-date "2 –  7 July 1904"))
+  (format-date "22 – 23 April 1906 — 17:00-,"))
+
+(defn get-event-ids
+  [pending-url]
+  (let [existing-row (-> (h/select :*)
+                         (h/from :events)
+                         (h/where [:= :url (:url pending-url)])
+                         (h/limit 1)
+                         (execute!)
+                         (first))
+        game-id (or (-> pending-url :extra :games/id)
+                    (:events/game-id existing-row))
+        sport-id (or (-> pending-url :extra :sports/id)
+                     (:events/sport-id existing-row))
+        event-id (or (-> pending-url :extra :events/id)
+                     (:events/id existing-row))]
+    {:game-id game-id
+     :sport-id sport-id
+     :event-id event-id}))
+
+(comment
+  (get-event-ids {:type :results
+                  :url "/results/19004780"}))
+
+(def statuses #{"Olympic" "Intercalated" "YOG"})
+
+(def bad-urls
+  #{"/results/153156" "/results/185098" "/results/303000" "/results/350939" "/results/51499"
+    "/results/6000000" "/results/6000242" "/results/6000243" "/results/920012" "/results/920017"
+    "/results/920032" "/results/920041" "/results/920044" "/results/920050" "/results/920053"
+    "/results/920055" "/results/920059" "/results/920062" "/results/920065" "/results/920076"
+    "/results/923439" "/results/923440" "/results/924618" "/results/9254" "/results/964"})
 
 (defmethod get-links :results [pending-url]
-  (let [html (parse-page (:url pending-url))
-        date (volatile! nil)
-        insert (fn [row]
-                 (prn row)#_
-                 (-> (h/insert-into :results)
-                     (h/values [row])
-                     (h/returning :*)
-                     (execute!)))]
-    (postwalk
-     (fn [obj]
-       (when-not @date
-         (when-let [d (date-pat obj)]
-           (vreset! date (format-date ('?date d "")))))
-       obj)
-     html)
-    (postwalk
-     (fn [obj]
-       (when (vector? obj)
-         (let [team-match (delay (team-pat obj))
-               bib-match (delay (bib-pat obj))
-               player-match (delay (player-pat obj))
-               string-match (delay (string-pat obj))]
-           (when-let [{:syms [?winner ?NOC ?medal]} (or @team-match @bib-match
-                                                        @player-match @string-match)]
-             (let [winner (if (sequential? ?winner)
-                            (->> ?winner
-                                 (keep winner-pat)
-                                 (keep '?winner)
-                                 (str/join ", "))
-                            ?winner)]
-               (insert {:results/date @date
-                        :results/athlete winner
-                        :results/country (country-code->name ?NOC)
-                        :results/medal ?medal
-                        :results/game-id (-> pending-url :extra :games/id)
-                        :results/sport-id (-> pending-url :extra :sports/id)
-                        :results/event-id (-> pending-url :extra :events/id)})))))
-       obj)
-     html)
-    nil))
+  (when-not (bad-urls (:url pending-url))
+    (let [html (or (:html pending-url) (parse-page (:url pending-url)))
+          {:keys [game-id sport-id event-id]} (get-event-ids pending-url)
+          status (volatile! nil)
+          date (volatile! nil)
+          rows (volatile! [])
+          insert (fn [row]
+                   (prn row)
+                   (vswap! rows conj row)
+                   (try (-> (h/insert-into :results)
+                            (h/values [row])
+                            (h/returning :*)
+                            (execute!))
+                        (catch Exception ex
+                          (prn (ex-message ex)))))]
+      (postwalk
+       (fn [obj]
+         (when-not @status
+           (when-let [s (status-pat obj)]
+             (vreset! status ('?status s))))
+         (when-not @date
+           (when-let [d (date-pat obj)]
+             (vreset! date (format-date (or ('?date d) "")))))
+         obj)
+       html)
+      (when (statuses @status)
+        (postwalk
+         (fn [obj]
+           (when (vector? obj)
+             (let [country-match (delay (country-pat obj))
+                   accordian-match (delay (accordian-pat obj))
+                   bib-match (delay (bib-pat obj))
+                   player-match (delay (player-pat obj))
+                   string-match (delay (string-pat obj))
+                   team-match (delay (team-pat obj))]
+               (when-let [{:syms [?winner ?NOC ?medal]} (or @country-match @accordian-match @bib-match
+                                                            @player-match @string-match @team-match)]
+                 (let [winner (if (sequential? ?winner)
+                                (->> ?winner
+                                     (keep #(if (string? %) % ('?winner (winner-pat %))))
+                                     (str/join ", "))
+                                ?winner)]
+                   (insert {:results/status @status
+                            :results/date @date
+                            :results/athlete winner
+                            :results/country (country-code->name ?NOC)
+                            :results/medal ?medal
+                            :results/game-id game-id
+                            :results/sport-id sport-id
+                            :results/event-id event-id})))))
+           obj)
+         html))
+      (when (and (statuses @status) (empty? @rows))
+        (println "Cannot find match for" (pr-str (str base-url (:url pending-url)))
+                 (pr-str (:file pending-url)))))))
 
 (comment
   (get-links {:type :results
-              :url "/results/40042"}))
+              :url "/results/9616"}))
 
-(defn executor []
-  (add-pending-url {:type :games :url "/editions"})
-  (loop []
-    (when-let [link (get-pending-url)]
-      (prn (:type link) (:url link))
-      (try (when-not (seen-url? (:url link))
-             (saw-url (:url link))
-             (get-links link))
-           (catch ExceptionInfo ex
-             (if (= 429 (:status (ex-data ex)))
-               (do (add-pending-url link)
-                   (prn "sleeping")
-                   (.sleep TimeUnit/SECONDS 45))
-               (do (prn ex)
-                   (throw ex)))))
-      (recur))))
+(defn downloader []
+  (when-let [link (get-pending-url)]
+    (prn (:type link) (:url link))
+    (try (when-not (seen-url? (:url link))
+           (saw-url (:url link))
+           (get-links link))
+      (catch ExceptionInfo ex
+        (if (= 429 (:status (ex-data ex)))
+          (do (unsee-url (:url link))
+            (add-pending-url link)
+            (prn "sleeping")
+            (.sleep TimeUnit/SECONDS 45))
+          (do (prn ex)
+            (throw ex)))))
+    (recur)))
 
 (comment
-  (executor))
+  (add-pending-url {:type :results :url "/results/70047"})
+  (downloader))
+
+(defn edn-read [file]
+  (edn/read-string {:default tagged-literal} (slurp (str file))))
+
+(defn reader []
+  (doseq [file (fs/glob "data/olympedia/results" "*.edn")
+          :let [html (edn-read file)
+                url (as-> (str file) %
+                      (str/split % #"/")
+                      (last %)
+                      (subs % 0 (- (count %) 4))
+                      (str "/results/" %))
+                pending-url {:type :results
+                             :file (str file)
+                             :url url
+                             :html html}]]
+    (get-links pending-url)))
+
+(comment
+  (reader)
+  (edn-read "data/olympedia/results/19004780.edn")
+  )
 
 (defn get-rows []
   (-> (h/select :games/year :games/city :sports/name :events/name :events/url
@@ -438,12 +557,14 @@
 
 (defn set-date
   [row]
-  (let [[_ year month day] (re-find #".*?(\d\d\d\d)-(\d\d)-(\d+)" (:results/date row))]
-    (-> row
-        (assoc :results/year (parse-long year))
-        (assoc :results/month (parse-long month))
-        (assoc :results/day (parse-long day))
-        (assoc :results/date (format "%s-%s-%02d" year month (parse-long day))))))
+  (if (= "XXXX-XX-XXX" (:results/date row))
+    (doto row prn)
+    (let [[_ year month day] (re-find #".*?(\d\d\d\d)-(\d\d)-(\d+)" (:results/date row))]
+      (-> row
+          (assoc :results/year (parse-long year))
+          (assoc :results/month (parse-long month))
+          (assoc :results/day (parse-long day))
+          (assoc :results/date (format "%s-%s-%02d" year month (parse-long day)))))))
 
 (comment
   country-names
@@ -453,26 +574,53 @@
   [row]
   (assoc row :games/season (season [(:games/year row) (:games/city row)])))
 
+(defn set-winner
+  [row]
+  (-> row
+    (assoc :results/winner (:results/athlete row))
+    (update :results/winner #(-> %
+                               (str/trim)
+                               (str/replace ",  / ," ",")))))
+
+(defn strip-weightclass
+  [row]
+  (if (#{"Boxing" "Weightlifting" "Wrestling"} (:sports/name row))
+    (-> row
+      (update :events/name #(-> %
+                              (str/trim)
+                              (str/replace "&gt;" ">")
+                              (str/replace "&lt;" "<")
+                              (str/replace #" \(.[\d\.]+½? (pounds|kg|kilograms)\)," ",")
+                              (str/replace #" \(.[\d\.]+½? lbs \[\d+ kg\]\)," ","))))
+    row))
+
 (comment
+  (strip-weightclass {:sports/name "Boxing"
+                      :events/name "Featherweight (≤60 kilograms), Men"})
   (set-season (last (get-rows))))
 
 (def map->csv
   (juxt :games/season :results/year :results/month :results/day :games/city :sports/name :events/name
-        :events/url :results/medal :results/athlete :results/country))
+        :events/url :results/medal :results/winner :results/country))
+
+(def sorter
+  (juxt :results/year #(format "%02d" (:results/month %)) #(format "%02d" (:results/day %))
+        :sports/name :events/name #({"Gold" 1 "Silver" 2 "Bronze" 3} (:results/medal %)) :results/athlete))
 
 (comment
   (with-open [writer (io/writer "./data/olympic-medals-2.csv")]
     (csv/write-csv writer
       (into [["season" "year" "month" "day" "city" "sport" "event" "url" "medal" "winner" "country"]]
             (->> (get-rows)
-                 (mapv #(-> % set-date set-season))
-                 (sort-by (juxt :results/date :sports/name :events/name #({"Gold" 1 "Silver" 2 "Bronze" 3} (:results/medal %))))
+                 (mapv #(-> % set-date set-season set-winner strip-weightclass))
+                 (sort-by sorter)
+                 (distinct)
                  (mapv map->csv))))))
 
 (defn csv-data->maps [csv-data]
   (map zipmap
        (->> (first csv-data)
-            (map keyword)
+            (map (comp keyword str/lower-case))
             repeat)
 	  (rest csv-data)))
 
@@ -485,39 +633,16 @@
                     (update :month parse-long)
                     (update :day parse-long))))))
 
-(def v4
-  (group-by (juxt :season :year :month :day :city :sport :event :url :medal :country)
-            v1))
+(def existing-urls
+  (->> v1
+       (mapv :url)
+       (set)))
 
-(def temp
-  (->> (vals v4)
-       (mapcat (fn [row]
-                 (if (= 1 (count row))
-                   row
-                   (remove #(#{"" "-" "–"} (:winner %)) row))))))
-
-(defn set-by [f coll]
-  (persistent!
-   (reduce
-    (fn [ret x]
-      (let [k (f x)]
-        (assoc! ret k (conj (get ret k #{}) x))))
-    (transient {}) coll)))
-
-(def v3
-  (set-by (juxt :url :medal) v1))
-
-(def v3->csv
-  (juxt :season :year :month :day :city :sport :event :url :medal :winner :country))
-
-(def v3-sorter
-  (juxt :year #(format "%02d" (:month %)) #(format "%02d" (:day %))
-        :sport :event #({"Gold" 1 "Silver" 2 "Bronze" 3} (:medal %)) :winner))
-
-(comment
-  (with-open [writer (io/writer "./data/olympic-medals-2.csv")]
-    (csv/write-csv writer
-      (into [["season" "year" "month" "day" "city" "sport" "event" "url" "medal" "winner" "country"]]
-            (->> temp
-                 (sort-by v3-sorter)
-                 (mapv v3->csv))))))
+(def existing-files
+  (->> (fs/glob "data/olympedia/results" "*.edn")
+       (mapv (fn [file] (as-> (str file) %
+                      (str/split % #"/")
+                      (last %)
+                      (subs % 0 (- (count %) 4))
+                      (str "/results/" %))))
+       (set)))

@@ -7,7 +7,10 @@
         com.github.seancorfield/honeysql {:mvn/version "2.7.1368"}
         org.clojure/data.json {:mvn/version "2.5.2"}
         org.clojure/data.csv {:mvn/version "1.1.1"}
-        datalevin/datalevin {:mvn/version "0.10.5"}}
+        datalevin/datalevin {:mvn/version "0.10.5"}
+        pangloss/pattern {:git/url "https://github.com/pangloss/pattern"
+                          :git/sha "0ab88a4224c589d6f33b4f9f2f18d96ee1ea03c2"}
+        babashka/fs {:mvn/version "0.5.31"}}
  :aliases
  {:dev {:extra-paths ["dev"]
         :extra-deps {babashka/fs {:mvn/version "0.5.26"}}}
@@ -17,4 +20,6 @@
          :main-opts  ["-m" "nrepl.cmdline"
                       "--interactive"
                       "--middleware" "[cider.nrepl/cider-middleware]"
-                      "-f" "rebel-readline.main/-main"]}}}
+                      "-f" "rebel-readline.main/-main"]}
+  :db {:jvm-opts ["--add-opens=java.base/java.nio=ALL-UNNAMED"
+                  "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"]}}}
